@@ -28,7 +28,7 @@ function wp_api_v2_get_any_post ( $request ) {
 	
 	// response for nothing found
 	if( !$request['id'] ) {
-		return new WP_Error( 'id_not_found', 'No objects in wp_posts for id: '. $request['id']['id'], array( 'status' => 404 ) );
+		return new WP_Error( 'id_not_found', 'No objects in wp_posts for id: '. $request['id'], array( 'status' => 404 ) );
 	}
 	
 	// query for the object based on $id - will not return revisions or post types registered with exclude_from_search
