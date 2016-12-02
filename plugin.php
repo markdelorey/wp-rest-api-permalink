@@ -1,11 +1,20 @@
 <?php 
 /*
-Plugin Name: WP Any Item REST API 
+Plugin Name: WP REST API Any Item
 Version: 0.1 alpha
-Description: Makes any object in the wp_posts table available by permalink or id regardless of post type.
+Description: Makes any post in the wp_posts table available by permalink or id regardless of post type.
 Author: Mark Delorey
 Author URI: http://www.markdelorey.com
 */
+
+
+
+/*
+function _rest_api_v2_exists() {
+	return class_exists( 'WP_REST_Controller' );
+}
+*/
+
 
 /**
  * Get an object from the wp_posts table by id or permalink
