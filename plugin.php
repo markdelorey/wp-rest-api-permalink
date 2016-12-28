@@ -59,7 +59,7 @@ function wp_api_v2_get_post_by_permalink ( $request ) {
 	}
 	
 	// catch other cases with an unknown error
-	return new WP_Error( 'unknown_error', 'An unknown error occured in wp_api_v2_get_any_post while searching for '. $request['url'], array( 'status' => 500 ) );
+	return new WP_Error( 'unknown_error', 'An unknown error occured in wp_api_v2_get_post_by_permalink while searching for '. $request['url'], array( 'status' => 500 ) );
 }
 
 add_action( 'rest_api_init', function () {
