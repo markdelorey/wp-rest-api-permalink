@@ -1,8 +1,8 @@
 <?php 
 /*
-Plugin Name: WP REST API Any Item
+Plugin Name: WP REST API Permalink
 Version: 0.1 alpha
-Description: Makes any post in the wp_posts table available by permalink or id regardless of post type.
+Description: Makes any post in the wp_posts table available by permalink regardless of post type.
 Author: Mark Delorey
 Author URI: http://www.markdelorey.com
 */
@@ -17,19 +17,17 @@ function _rest_api_v2_exists() {
 
 
 /**
- * Get an object from the wp_posts table by id or permalink
- * @return array - List of product objects
+ * Get an object from the wp_posts table by its permalink
+ * @return post object
  */
-function wp_api_v2_get_any_post ( $request ) {
+function wp_api_v2_get_post_by_permalink ( $request ) {
 	
 	/*
 	 *	TODO: sanitize the input a little better
 	 */
 	
 	// determine if we have an id or a permalink
-	if( !is_numeric($request['id']) ) {
-		$request['id']	=	url_to_postid( $request['id'] );
-	}
+	$request['id']	=	url_to_postid( $request['url'] );
 	
 	/*
 	 *	TODO: Look at how to determine how many results from the query and respond accordingly
@@ -37,7 +35,7 @@ function wp_api_v2_get_any_post ( $request ) {
 	
 	// response for nothing found
 	if( !$request['id'] ) {
-		return new WP_Error( 'id_not_found', 'No objects in wp_posts for id: '. $request['id'], array( 'status' => 404 ) );
+		return new WP_Error( 'id_not_found', 'No objects in wp_posts for permalink: '. $request['url'], array( 'status' => 404 ) );
 	}
 	
 	// query for the object based on $id - will not return revisions or post types registered with exclude_from_search
@@ -48,7 +46,7 @@ function wp_api_v2_get_any_post ( $request ) {
 	
 	// should only find one object in wp_posts
 	if( $q->post_count > 1 ) {
-		return new WP_Error( 'multiple_ids_found', 'Multiple objects found in wp_posts for id: '. $request['id'], array( 'status' => 404 ) );
+		return new WP_Error( 'multiple_ids_found', 'Multiple objects found in wp_posts for permalink: '. $request['url'], array( 'status' => 404 ) );
 	}
 	
 	// prepare wp_post object for response
@@ -61,12 +59,12 @@ function wp_api_v2_get_any_post ( $request ) {
 	}
 	
 	// catch other cases with an unknown error
-	return new WP_Error( 'unknown_error', 'An unknown error occured in wp_api_v2_get_any_post while searching for '. $request['id']['id'], array( 'status' => 500 ) );
+	return new WP_Error( 'unknown_error', 'An unknown error occured in wp_api_v2_get_any_post while searching for '. $request['url'], array( 'status' => 500 ) );
 }
 
 add_action( 'rest_api_init', function () {
-    register_rest_route( 'wp/v2', '/any-post', array(
+    register_rest_route( 'wp/v2', '/permalink', array(
         'methods' => 'GET',
-        'callback' => 'wp_api_v2_get_any_post',
+        'callback' => 'wp_api_v2_get_post_by_permalink',
     ) );
 } );
